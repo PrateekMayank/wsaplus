@@ -10,15 +10,14 @@ The workflow is divided into two main stages:
 
 ## End-to-End Workflow
 
-```mermaid
 flowchart TD
-  A[Input Synoptic Magnetograms<br/>(GONG/HMI)] --> B[Optimization<br/>fit_wsa_params.py]
-  B --> C[Parameter Plots<br/>plot_fitted_params.py]
-  C --> D[Generalization Training<br/>train.py]
-  D --> E[Loss Curves<br/>loss_plot.py]
-  D --> F[CR-wise Visuals<br/>post_training_CR_plots.py]
-  D --> G[CR-wise Metrics<br/>post_training_CR_metrices.py]
-  D --> H[2D Speed Maps<br/>3_2D_map_plot.py]
-  D --> I[In-situ Panels<br/>in-situ_maps.py]
-  D --> J[Dataset Comparison<br/>dataset_comparision.py]
-  A -. optional -.-> D
+  A["Input Synoptic Magnetograms (GONG/HMI)"] --> B["Optimization: fit_wsa_params.py"]
+  B --> C["Parameter Plots: plot_fitted_params.py"]
+  C --> D["Generalization Training: train.py"]
+  D --> E["Loss Curves: loss_plot.py"]
+  D --> F["CR-wise Visuals: post_training_CR_plots.py"]
+  D --> G["CR-wise Metrics: post_training_CR_metrices.py"]
+  D --> H["2D Speed Maps: 3_2D_map_plot.py"]
+  D --> I["In-situ Panels: in-situ_maps.py"]
+  D --> J["Dataset Comparison: dataset_comparision.py"]
+  A -. "optional" .-> D
