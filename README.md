@@ -17,8 +17,7 @@ flowchart TD
   C --> D["Generalization Training: train.py"]
   D --> E["Loss Curves: loss_plot.py"]
   D --> F["CR-wise Visuals: post_training_CR_plots.py"]
-  D --> G["CR-wise Metrics: post_training_CR_metrices.py"]
+  D --> G["All CRs Metrics: post_training_CR_metrices.py"]
   D --> H["2D Speed Maps: 3_2D_map_plot.py"]
   D --> I["In-situ Panels: in-situ_maps.py"]
   D --> J["Dataset Comparison: dataset_comparision.py"]
-  A -. "optional" .-> D
