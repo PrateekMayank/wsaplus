@@ -7,7 +7,13 @@ The workflow is divided into two main stages:
 2. **Generalization** — training a neural network to predict optimized WSA speed maps directly from magnetogram-derived features.
 
 ---
+## Data & Model Checkpoint (Zenodo)
 
+The **training dataset** and the **WSA+ model checkpoint (`wsaplus.pt`)** are hosted on Zenodo:
+
+**DOI:** https://doi.org/10.5281/zenodo.16883042
+
+---
 ## End-to-End Workflow
 
 ```mermaid
