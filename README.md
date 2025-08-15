@@ -18,7 +18,7 @@ The **training dataset** and the **WSA+ model checkpoint (`wsaplus.pt`)** are ho
 
 ```mermaid
 flowchart TD
-  A["Input Synoptic Magnetograms (GONG/HMI)"] --> B["Optimization: fit_wsa_params.py"]
+  A["Input Synoptic Magnetograms"] --> B["Optimization: fit_wsa_params.py"]
   B --> C["Parameter Plots: plot_fitted_params.py"]
   C --> D["Generalization Training: train.py"]
   D --> E["Loss Curves: loss_plot.py"]
