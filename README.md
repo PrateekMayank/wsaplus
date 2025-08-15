@@ -10,6 +10,7 @@ The workflow is divided into two main stages:
 
 ## End-to-End Workflow
 
+```mermaid
 flowchart TD
   A["Input Synoptic Magnetograms (GONG/HMI)"] --> B["Optimization: fit_wsa_params.py"]
   B --> C["Parameter Plots: plot_fitted_params.py"]
