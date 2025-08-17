@@ -109,11 +109,9 @@ def plot_combined_3cr_figure():
         
         # Define coordinate grids
         lon = np.linspace(0, 360, wsa_default.shape[0])
-        lat = np.linspace(-90, 90, wsa_default.shape[1])
-        
-        # Create sinusoidal latitude transformation
-        lat_sin = np.sin(lat * np.pi / 180)
-        LON, LAT_SIN = np.meshgrid(lon, lat_sin)
+        lat = np.linspace(-1, 1, wsa_default.shape[1])  # sine of latitude in degrees
+
+        LON, LAT = np.meshgrid(lon, lat)
         
         # Data and titles for 3 subplots per row
         plots_data = [
@@ -126,8 +124,8 @@ def plot_combined_3cr_figure():
         for col, (data, title, cmap, levels, cbar_label) in enumerate(plots_data):
             ax = axs[row, col]
             
-            # Create contour plot with sinusoidal latitude grid
-            im = ax.contourf(LON, LAT_SIN, data.T, levels=levels, cmap=cmap, extend='both')
+            # Create contour plot with arcsin latitude grid
+            im = ax.contourf(LON, LAT, data.T, levels=levels, cmap=cmap, extend='both')
             
             # Formatting
             ax.set_title(title, fontsize=16)
@@ -137,20 +135,18 @@ def plot_combined_3cr_figure():
                 ax.set_xlabel('Longitude (°)', fontsize=15)
             
             if col == 0:  # Only leftmost column gets y-axis labels
-                ax.set_ylabel('Latitude (°)', fontsize=15)
+                ax.set_ylabel('Sine of Latitude (°)', fontsize=15)
             
-            # Set axis limits for sinusoidal grid
+            # Set axis limits for arcsin grid
             ax.set_xlim(0, 360)
-            ax.set_ylim(-1, 1)  # Sinusoidal range from -1 to 1
+            ax.set_ylim(-1, 1)  # Range of arcsin(-1) to arcsin(1)
             
             # Set ticks with appropriate labels
             ax.set_xticks(np.arange(0, 361, 90))
             
-            # Create custom y-ticks at sinusoidal positions
-            lat_ticks = np.array([-90, -30, 0, 30, 90])
-            sin_ticks = np.sin(lat_ticks * np.pi / 180)
-            ax.set_yticks(sin_ticks)
-            ax.set_yticklabels([f'{int(lat)}' for lat in lat_ticks])
+            # Create custom y-ticks at arcsin positions
+            lat_ticks = np.array([-1.0, -0.5, 0.0, 0.5, 1.0])
+            ax.set_yticks(lat_ticks)
             ax.minorticks_on()
             
             # Add colorbar
