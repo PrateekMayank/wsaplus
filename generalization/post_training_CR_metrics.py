@@ -148,6 +148,28 @@ y_limits = {
     'fit_score': (0, 1.0)
 }
 
+#-----------------------------------------------------------
+# Define the manifest and splits
+manifest = metrics_df['cr'].tolist()  # Assuming 'cr' column corresponds to the manifest
+val_manifest = [manifest[i] for i in range(len(manifest)) if i % 6 == 0]
+test_manifest = [manifest[i] for i in range(len(manifest)) if i % 6 == 1]
+train_manifest = [manifest[i] for i in range(len(manifest)) if i % 6 != 0 and i % 6 != 1]
+
+# Add a column to indicate the dataset split
+def get_split(cr):
+    if cr in val_manifest:
+        return 'Validation'
+    elif cr in test_manifest:
+        return 'Test'
+    else:
+        return 'Train'
+
+metrics_df['split'] = metrics_df['cr'].apply(get_split)
+
+# Define colors for each split
+split_colors = {'Train': 'C0', 'Validation': 'purple', 'Test': 'C1'}
+#-----------------------------------------------------------
+
 # Create a figure with 9 subplots (3 rows, 3 columns)
 fig, axs = plt.subplots(3, 3, figsize=(20, 12), gridspec_kw={'height_ratios': [1, 1, 0.8]})
 axs = axs.flatten()
@@ -163,12 +185,12 @@ for i, (m1, m2) in enumerate(metric_pairs):
         if m1 in ('cc_wsa_def'):
             # For other metrics, lower is better
             color = 'red' if diff < 0 else 'green'
-            alpha = 0.08 if diff < 0 else 0.12
+            alpha = 0.05 if diff < 0 else 0.08
             
         else:
             # For correlation, higher is better
             color = 'red' if diff > 0 else 'green'
-            alpha = 0.05 if diff > 0 else 0.12       
+            alpha = 0.08 if diff > 0 else 0.08       
 
         ax.vlines(x, y1, y2, color=color, alpha=alpha, linewidth=4)
     
@@ -192,18 +214,33 @@ for i, (m1, m2) in enumerate(metric_pairs):
     y2_smooth = np.polyval(coef2, x_smooth)
     
     # plot curves with higher alpha
-    ax.plot(x_smooth, y1_smooth, color='C0', linestyle='-', linewidth=1.5, alpha=0.45)
-    ax.plot(x_smooth, y2_smooth, color='grey', linestyle='-', linewidth=1.5, alpha=0.45)
+    ax.plot(x_smooth, y1_smooth, color='grey', linestyle='-', linewidth=1.5, alpha=0.45)
+    ax.plot(x_smooth, y2_smooth, color='C0', linestyle='-', linewidth=1.5, alpha=0.45)
     
-    # scatter plots for each metric
-    ax.scatter(metrics_df['cr'], metrics_df[m1], alpha=0.7, color='C0', label='WSA Default')
-    ax.scatter(metrics_df['cr'], metrics_df[m2], alpha=0.7, color='grey', label='WSA+')
+    # scatter plots for each metric of WSA default
+    ax.scatter(metrics_df['cr'], metrics_df[m1], alpha=0.7, color='grey', label='WSA Default')
+    # scatter plots for each metric of WSA+ with color coding based on the split
+    for split, color in split_colors.items():
+        split_mask = metrics_df['split'] == split
+        ax.scatter(
+            metrics_df.loc[split_mask, 'cr'], 
+            metrics_df.loc[split_mask, m2], 
+            alpha=0.7, 
+            facecolor=color,  # Distinct face color for each split
+            edgecolor='C0',   # Consistent edge color for all points
+            linewidth=2,    # Edge line width
+            s=30,           # Marker size
+            label=f'WSA+ ({split})'
+        )
+
+    # Add legend
+    ax.legend(ncol=2, loc='upper center', fontsize=12)
     
     # compute means and horizontal lines
     m1_mean = metrics_df[m1].mean()
     m2_mean = metrics_df[m2].mean()
-    ax.axhline(m1_mean, color='C0', linestyle='--')
-    ax.axhline(m2_mean, color='grey', linestyle='--')
+    ax.axhline(m1_mean, color='grey', linestyle='--')
+    ax.axhline(m2_mean, color='C0', linestyle='--')
     
     # Format title based on metric name
     title_map = {
@@ -397,7 +434,7 @@ fig.align_ylabels(axs[:9])
 plt.tight_layout(rect=[0, 0, 1, 0.96])
 
 # Save the figure
-plt.savefig('CR_metrics/metrics_distribution.png', dpi=300, bbox_inches='tight')
+plt.savefig('CR_metrics/metrics_distribution_new.png', dpi=300, bbox_inches='tight')
 plt.close()
 
 # Save the classification data
